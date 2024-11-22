@@ -9,6 +9,7 @@ import time
 import ast
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type, TypeVar, Union
+from dotenv import load_dotenv
 
 #data handling
 import pandas as pd

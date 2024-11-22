@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #pyg
+import torch
 import torch_geometric as pyg
 
 

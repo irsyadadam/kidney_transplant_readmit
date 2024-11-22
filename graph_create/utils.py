@@ -27,17 +27,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #pyg
+import torch
 import torch_geometric as pyg
 
 
 def create_pyg_heterodata(x1: Optional[np.ndarray] = None,
                           x2: Optional[np.ndarray] = None,
-                          node_type: Optional[str] = "patient"
+                          node_type: Optional[str] = "patient",
                           m1_edge_index: Optional[Tuple[int, int]] = None, 
                           m1_edge_weight: Optional[np.ndarray] = None, 
                           m1_edge_name: Optional[str] = "d-r",
-                          m2_edge_index: Optional[Tuple[int, int]], 
-                          m2_edge_weight: Optional[np.ndarray], 
+                          m2_edge_index: Optional[Tuple[int, int]] = None, 
+                          m2_edge_weight: Optional[np.ndarray] = None, 
                           m2_edge_name: Optional[str] = "similarity") -> pyg.data.HeteroData:
     r"""
     takes in 2 modal edge types and returns heterogenous data. meant for pyg.to_hetero(GNN) encoder.

@@ -10,6 +10,8 @@ import time
 import ast
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type, TypeVar, Union
+from dotenv import load_dotenv
+import argparse
 
 #data handling
 import pandas as pd
@@ -27,9 +29,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from kidney_donor_matching.graph_create.network_creation import create_kr_sim_network
-from kidneys_donor_matching.encoder.train_encoder import train_encoder
-from kidneys_donor_matching.encoder.extract_embeddings import extract_embeddings
+from graph_create.network_creation import create_kr_sim_network
+from encoder.train_encoder import train_encoder
+# from encoder.extract_embeddings import extract_embeddings
 
 
 
@@ -40,6 +42,7 @@ if __name__ == '__main__':
     DATA_PATH = os.getenv("DATA_PATH")
     data = pd.read_csv(DATA_PATH)
     
+    print(data.head())
 
     #CLI args
     parser = argparse.ArgumentParser(description="")

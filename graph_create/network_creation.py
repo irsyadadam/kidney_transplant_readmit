@@ -32,11 +32,11 @@ import torch_geometric as pyg
 #import
 from graph_create.similarity_network import similarity_network_creation
 from graph_create.kidney_recipient_network import donor_recipient_network_creation
-from graph_create.utils import create_pyg_heterodata, create_pyg_data, 
+from graph_create.utils import create_pyg_heterodata, create_pyg_data 
     
 
-def create_kr_sim_network(subject: Optional[pd.DataFrame[Any]] = None,
-                          object: Optional[pd.DataFrame[Any]] = None,
+def create_kr_sim_network(subject: Optional[pd.DataFrame] = None,
+                          object: Optional[pd.DataFrame] = None,
                           link_col: Optional[str] = "CASEID",
                           similarity_threshold: Optional[float] = 0.0001,
                           graph_type: Optional[str] = "hetero") -> Any:
