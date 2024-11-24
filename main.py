@@ -63,7 +63,30 @@ if __name__ == '__main__':
 
     #load data
     #TODO: FIX THE DATA LOAD
-    data = create_kr_sim_network(graph_type = "hetero")
+    
+    # Preprocess data to get matching columns
+    # Get donor features
+    donor_cols = [col for col in data.columns if col.startswith("d_") or col.startswith("dd_")]
+    donor = data[donor_cols]
+
+    # Rename the columns by dropping the prefixes
+    donor.rename(
+        columns={col: col.lstrip("d_").lstrip("d_") for col in donor_cols}, 
+        inplace=True
+    )
+
+    # Find shared features between donor and recipient
+    shared_columns = donor.columns
+    shared_columns = [col for col in shared_columns if col in data.columns]
+
+    # Filter for shared features
+    recipient = data[shared_columns]
+    recipient["CASEID"] = data["CASEID"]
+    donor = donor[shared_columns]
+    donor["CASEID"] = data["CASEID"]
+    
+    # data = create_kr_sim_network(graph_type = "hetero")
+    data = create_kr_sim_network(subject = donor, object = recipient, graph_type = "hetero")
 
     if args.GNN is None or args.SCORING is None or args.KGE is None:
         #override with configs file

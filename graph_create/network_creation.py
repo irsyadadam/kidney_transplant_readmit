@@ -58,16 +58,18 @@ def create_kr_sim_network(subject: Optional[pd.DataFrame] = None,
     assert graph_type in ["hetero", "homo"]
 
     #TODO: accomodate for 1 single df for everything
-    subject = _to_subject(df)
-    object = _to_object(df)
-    linlk = _to_link(df)
+    # subject = _to_subject(df)
+    # object = _to_object(df)
+    # linlk = _to_link(df)
 
     #get first knowledge graph
+    # Make output match donor_recipient_network_creation match the SLATE.ipynb
     dr_edge_index, dr_edge_weight, dr_edge_type, subject, object = donor_recipient_network_creation(subject = subject, object = object, link_col = link_col)
     final_df = pd.concat([subject, object], ignore_index=True)
 
     #get second knowledge graph
-    s_edge_index, s_edge_weight, s_edge_type = similarity_network_creation(feature_matrix = final_np, threshold = similarity_threshold) #similarity operator already defined as gaussian kernel
+    # Same, match with SLATE.ipynb
+    s_edge_index, s_edge_weight, s_edge_type = similarity_network_creation(feature_matrix = final_df, threshold = similarity_threshold) #similarity operator already defined as gaussian kernel
 
     if graph_type == "homo":
         #standard
