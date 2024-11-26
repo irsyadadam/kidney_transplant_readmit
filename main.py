@@ -30,10 +30,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from graph_create.network_creation import create_kr_sim_network
+from graph_create.utils import preprocess
 from encoder.train_encoder import train_encoder
 # from encoder.extract_embeddings import extract_embeddings
 
-import utils
+# from utils import preprocess
 
 if __name__ == '__main__':
 
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     
     #TODO: Create function and put into utils
     #TODO: Create padded dataset and store in runtime (as a variable)
-    recipient, donor = utils.preprocess(data = data)
+    recipient, donor = preprocess(data = data)
     # recipient, donor = utils.preprocess_padding(data = data)
     
     # data = create_kr_sim_network(graph_type = "hetero")
