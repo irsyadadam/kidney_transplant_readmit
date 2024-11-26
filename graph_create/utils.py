@@ -30,6 +30,82 @@ import seaborn as sns
 import torch
 import torch_geometric as pyg
 
+def preprocess(data: Optional[pd.DataFrame] = None) -> pd.DataFrame:
+    r"""
+    Takes in dataset and separates into donor and recipient dataframes
+
+    ARGS:
+        data: pandas dataframe with donor and recipient features; donor features have d_ or d__ prefix
+
+    RETURNS:
+        recipient, donor
+
+    """
+    # Get donor features
+    donor_cols = [col for col in data.columns if col.startswith("d_") or col.startswith("dd_")]
+    donor = data[donor_cols]
+
+    # Rename the columns by dropping the prefixes
+    donor.rename(
+        columns={col: col.lstrip("d_").lstrip("d_") for col in donor_cols}, 
+        inplace=True
+    )
+
+    # Find shared features between donor and recipient
+    shared_columns = donor.columns
+    shared_columns = [col for col in shared_columns if col in data.columns]
+
+    # Filter for shared features
+    recipient = data[shared_columns]
+    recipient["CASEID"] = data["CASEID"]
+    donor = donor[shared_columns]
+    donor["CASEID"] = data["CASEID"]
+    
+    return recipient, donor
+
+def preprocess_padding(data: Optional[pd.DataFrame] = None) -> pd.DataFrame:
+    r"""
+    Takes in dataset and separates into donor and recipient dataframes, then pads. Note that the dataframe 
+    can only have donor and recipient features (i.e. no operation or complications features)
+
+    ARGS:
+        data: pandas dataframe with donor and recipient features; donor features have d_ or d__ prefix
+
+    RETURNS:
+        recipient, donor
+
+    """
+    
+    # Get donor features
+    donor_cols = [col for col in data.columns if col.startswith("d_") or col.startswith("dd_")]
+    donor = data[donor_cols]
+
+    # Rename the columns by dropping the prefixes
+    donor.rename(
+        columns={col: col.lstrip("d_").lstrip("d_") for col in donor_cols}, 
+        inplace=True
+    )
+
+    # Get recipient features
+    recipient = data[[col for col in data.columns if col not in donor_cols]]
+    
+    # Get union of all columns
+    all_columns = set(recipient.columns).union(set(donor.columns))
+    
+    # Padding
+    for col in all_columns:
+        if col not in recipient.columns:
+            recipient[col] = 0
+        if col not in donor.columns:
+            donor[col] = 0
+    
+
+    # Get correct CASEID
+    recipient["CASEID"] = data["CASEID"]
+    donor["CASEID"] = data["CASEID"]
+    
+    return recipient, donor
+    
 
 def create_pyg_heterodata(x1: Optional[np.ndarray] = None,
                           x2: Optional[np.ndarray] = None,

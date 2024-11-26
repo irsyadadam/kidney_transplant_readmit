@@ -33,7 +33,7 @@ from graph_create.network_creation import create_kr_sim_network
 from encoder.train_encoder import train_encoder
 # from encoder.extract_embeddings import extract_embeddings
 
-
+import utils
 
 if __name__ == '__main__':
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     DATA_PATH = os.getenv("DATA_PATH")
     data = pd.read_csv(DATA_PATH)
     
-    print(data.head())
+    # print(data.head())
 
     #CLI args
     parser = argparse.ArgumentParser(description="")
@@ -64,26 +64,10 @@ if __name__ == '__main__':
     #load data
     #TODO: FIX THE DATA LOAD
     
-    # Preprocess data to get matching columns
-    # Get donor features
-    donor_cols = [col for col in data.columns if col.startswith("d_") or col.startswith("dd_")]
-    donor = data[donor_cols]
-
-    # Rename the columns by dropping the prefixes
-    donor.rename(
-        columns={col: col.lstrip("d_").lstrip("d_") for col in donor_cols}, 
-        inplace=True
-    )
-
-    # Find shared features between donor and recipient
-    shared_columns = donor.columns
-    shared_columns = [col for col in shared_columns if col in data.columns]
-
-    # Filter for shared features
-    recipient = data[shared_columns]
-    recipient["CASEID"] = data["CASEID"]
-    donor = donor[shared_columns]
-    donor["CASEID"] = data["CASEID"]
+    #TODO: Create function and put into utils
+    #TODO: Create padded dataset and store in runtime (as a variable)
+    recipient, donor = utils.preprocess(data = data)
+    # recipient, donor = utils.preprocess_padding(data = data)
     
     # data = create_kr_sim_network(graph_type = "hetero")
     data = create_kr_sim_network(subject = donor, object = recipient, graph_type = "hetero")
